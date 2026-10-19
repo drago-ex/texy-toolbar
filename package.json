@@ -1,0 +1,12 @@
+{
+	"name": "drago-texy-toolbar",
+	"version": "1.0.0",
+	"type": "module",
+	"exports": {
+		".": "./src/assets/texy-toolbar.js",
+		"./copy-code": "./src/assets/copy-code.js"
+	},
+	"scripts": {
+		"test": "node --test"
+	}
+}

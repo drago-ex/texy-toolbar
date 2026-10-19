@@ -1,0 +1,30 @@
+{
+	"name": "drago-ex/texy-toolbar",
+	"description": "Texy for Nette: toolbar with a preview for a textarea, syntax highlighting of code blocks and a copy button, with Bootstrap 5 classes.",
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Zdeněk Papučík",
+			"homepage": "https://github.com/accgit"
+		}
+	],
+	"require": {
+		"php": ">=8.3 <9",
+		"nette/di": "^3.2",
+		"texy/texy": "^3.2"
+	},
+	"require-dev": {
+		"nette/tester": "^2.5",
+		"phpstan/phpstan": "^2.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Drago\\": "src"
+		}
+	},
+	"scripts": {
+		"phpstan": "phpstan analyse",
+		"tester": "tester tests -s -C"
+	}
+}
