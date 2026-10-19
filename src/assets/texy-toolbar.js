@@ -1,7 +1,8 @@
 /**
  * Toolbar for writing Texy in a textarea marked with the data-texy-toolbar attribute. A button inserts
  * the marks of Texy around the selection or puts the cursor where the text belongs. The attribute may hold
- * JSON with the preview URL and translated labels: {"preview": "/url", "labels": {"bold": "Tučně"}}.
+ * JSON with the preview URL, translated labels and the shown buttons (all when missing):
+ * {"preview": "/url", "labels": {"bold": "Tučně"}, "buttons": ["bold", "italic", "code"]}.
  * Only Bootstrap 5 classes and own icons.
  */
 import { format } from './format.js';
@@ -62,12 +63,15 @@ function apply(textarea, rule) {
 function createToolbar(textarea) {
 	const options = textarea.dataset.texyToolbar ? JSON.parse(textarea.dataset.texyToolbar) : {};
 	const labels = { ...defaultLabels, ...options.labels };
+	// names of the shown buttons, all by default; 'code' is the select of the code block
+	const shown = (name) => !options.buttons || options.buttons.includes(name);
+	const shownButtons = buttons.filter(({ name }) => shown(name));
 	const controls = [];
 
 	const toolbar = document.createElement('div');
 	toolbar.className = 'd-flex flex-wrap align-items-center gap-1 mb-2';
 
-	for (const { name, content, rule } of buttons) {
+	for (const { name, content, rule } of shownButtons) {
 		const button = document.createElement('button');
 		button.type = 'button';
 		button.className = 'btn btn-sm btn-outline-secondary lh-1';
@@ -79,20 +83,23 @@ function createToolbar(textarea) {
 		controls.push(button);
 	}
 
-	const code = document.createElement('select');
-	code.className = 'form-select form-select-sm w-auto';
-	code.setAttribute('aria-label', labels.code);
-	code.add(new Option(labels.code, ''));
-	languages.forEach((language) => code.add(new Option(language, language)));
-	code.addEventListener('change', () => {
-		apply(textarea, { block: ['/--code ' + code.value, '\\--'] });
-		code.value = '';
-	});
-	controls.push(code);
+	if (shown('code')) {
+		const code = document.createElement('select');
+		code.className = 'form-select form-select-sm w-auto';
+		code.setAttribute('aria-label', labels.code);
+		code.add(new Option(labels.code, ''));
+		languages.forEach((language) => code.add(new Option(language, language)));
+		code.addEventListener('change', () => {
+			apply(textarea, { block: ['/--code ' + code.value, '\\--'] });
+			code.value = '';
+		});
+		controls.push(code);
+	}
+
 	toolbar.append(...controls);
 
 	textarea.addEventListener('keydown', (event) => {
-		const button = buttons.find(({ key }) => key && key === event.key.toLowerCase());
+		const button = shownButtons.find(({ key }) => key && key === event.key.toLowerCase());
 		if (button && (event.ctrlKey || event.metaKey) && !event.shiftKey && !event.altKey) {
 			event.preventDefault();
 			apply(textarea, button.rule);

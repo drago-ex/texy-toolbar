@@ -67,6 +67,32 @@ test('A code block with an unknown language is left to Texy, still escaped', fun
 });
 
 
+test('Basic Texy keeps bold, links with nofollow, lists, quotes and code', function () {
+	$html = (new TexyFormatter)->toBasicHtml(
+		"**bold** \"Nette\":https://nette.org\n\n- one\n- two\n\n> quote\n\n/--code php\necho 1;\n\\--",
+	);
+	Assert::contains('<strong>bold</strong>', $html);
+	Assert::true(DomQuery::fromHtml($html)->has('a[href="https://nette.org"][rel="nofollow"]'));
+	Assert::contains('<li>one</li>', $html);
+	Assert::contains('<blockquote>', $html);
+	Assert::true(DomQuery::fromHtml($html)->has('pre > code > span.text-primary'));
+	Assert::same('', (new TexyFormatter)->toBasicHtml(' '));
+	Assert::contains('<br>', (new TexyFormatter)->toBasicHtml("first line\nsecond line"));
+});
+
+
+test('Basic Texy has no images, headings, tables or HTML tags', function () {
+	$html = (new TexyFormatter)->toBasicHtml(
+		"Title\n=====\n\n[* https://example.com/a.png *]\n\n|a|b|\n\n<b>bold</b> <script>x</script>",
+	);
+	Assert::notContains('<h', $html);
+	Assert::notContains('<img', $html);
+	Assert::notContains('<table', $html);
+	Assert::notContains('<b>', $html);
+	Assert::notContains('<script', $html);
+});
+
+
 test('The created Texy can be changed for a text that needs less', function () {
 	$texy = (new TexyFormatter)->createTexy();
 	$texy->allowed['image'] = false;

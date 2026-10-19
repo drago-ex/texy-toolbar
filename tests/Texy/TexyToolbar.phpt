@@ -33,9 +33,20 @@ test('Options hold the preview URL and the labels, translated when there is a tr
 });
 
 
+test('Basic options show only the basic buttons', function () {
+	$request = new Request(new UrlScript('http://localhost/'));
+	$options = (new TexyToolbar(new TexyFormatter, $request))->getBasicOptions('/');
+	Assert::same(TexyToolbar::BasicButtons, $options['buttons']);
+	Assert::same('/', $options['preview']);
+});
+
+
 test('The preview converts the POST field texy', function () {
-	$request = new Request(new UrlScript('http://localhost/'), post: ['texy' => '**bold**'], method: 'POST');
-	Assert::same(['html' => "<p><strong>bold</strong></p>\n"], (new TexyToolbar(new TexyFormatter, $request))->getPreview());
+	$request = new Request(new UrlScript('http://localhost/'), post: ['texy' => "**bold**\n\n[* https://example.com/a.png *]"], method: 'POST');
+	$toolbar = new TexyToolbar(new TexyFormatter, $request);
+	Assert::contains('<strong>bold</strong>', $toolbar->getPreview()['html']);
+	Assert::contains('<img', $toolbar->getPreview()['html']);
+	Assert::notContains('<img', $toolbar->getBasicPreview()['html']);
 
 	$request = new Request(new UrlScript('http://localhost/'), method: 'POST');
 	Assert::same(['html' => ''], (new TexyToolbar(new TexyFormatter, $request))->getPreview());

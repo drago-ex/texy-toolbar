@@ -29,6 +29,9 @@ class TexyToolbar
 		'previewError' => 'The preview could not be loaded.',
 	];
 
+	/** Buttons of the toolbar for the basic Texy of TexyFormatter::toBasicHtml() (code is the language select). */
+	public const array BasicButtons = ['bold', 'italic', 'link', 'list', 'numbered', 'quote', 'code'];
+
 
 	public function __construct(
 		private readonly TexyFormatter $formatter,
@@ -55,12 +58,38 @@ class TexyToolbar
 
 
 	/**
+	 * Options for the basic Texy (e.g. comments): only the buttons of BasicButtons.
+	 * @return array{preview: string, labels: array<string, string>, buttons: list<string>}
+	 */
+	public function getBasicOptions(string $previewUrl): array
+	{
+		return $this->getOptions($previewUrl) + ['buttons' => self::BasicButtons];
+	}
+
+
+	/**
 	 * Answer of the preview: the HTML of the POST field texy, for sendJson().
 	 * @return array{html: string}
 	 */
 	public function getPreview(): array
 	{
+		return ['html' => $this->formatter->toHtml($this->getText())];
+	}
+
+
+	/**
+	 * Answer of the preview of the basic Texy.
+	 * @return array{html: string}
+	 */
+	public function getBasicPreview(): array
+	{
+		return ['html' => $this->formatter->toBasicHtml($this->getText())];
+	}
+
+
+	private function getText(): ?string
+	{
 		$text = $this->httpRequest->getPost('texy');
-		return ['html' => $this->formatter->toHtml(is_string($text) ? $text : null)];
+		return is_string($text) ? $text : null;
 	}
 }

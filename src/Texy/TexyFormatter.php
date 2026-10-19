@@ -39,6 +39,40 @@ class TexyFormatter
 	}
 
 
+	/**
+	 * Basic Texy for texts of visitors, e.g. comments: bold, italic, links with rel="nofollow", lists, quotes
+	 * and code; no images, headings, tables or HTML tags.
+	 */
+	public function toBasicHtml(?string $text): string
+	{
+		if ($text === null || trim($text) === '') {
+			return '';
+		}
+
+		return $this->createBasicTexy()->process($text);
+	}
+
+
+	/** Texy of toBasicHtml(). */
+	public function createBasicTexy(): Texy
+	{
+		$texy = $this->createTexy();
+		$texy->allowedTags = Texy::NONE;
+		Configurator::disableImages($texy);
+		$texy->allowed['heading/surrounded'] = false;
+		$texy->allowed['heading/underlined'] = false;
+		$texy->allowed['table'] = false;
+		$texy->allowed['horizline'] = false;
+		$texy->allowed['link/definition'] = false;
+		$texy->allowed['html/comment'] = false;
+		$texy->linkModule->forceNoFollow = true;
+
+		// visitors expect a new line where they pressed Enter
+		$texy->mergeLines = false;
+		return $texy;
+	}
+
+
 	/** Texy with the safe settings; change it when a text needs less, e.g. comments without images. */
 	public function createTexy(): Texy
 	{

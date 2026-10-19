@@ -43,7 +43,10 @@ sql, neon) are highlighted.
 $this->template->content = $this->texyFormatter->toHtml($page->content);
 ```
 
-`createTexy()` gives the configured Texy for a text that needs less (e.g. comments without images).
+For texts of visitors, e.g. comments, `toBasicHtml()` allows only bold, italic, links (with `rel="nofollow"`),
+lists, quotes and code, and keeps the line breaks; no images, headings, tables or HTML tags.
+
+`createTexy()` and `createBasicTexy()` give the configured Texy for a text that needs something else.
 `Drago\Texy\Highlighter` can also be used alone: `$highlighter->highlight($code, 'php')`.
 
 ## Toolbar
@@ -79,6 +82,10 @@ public function handlePreview(): void
 	$this->getPresenter()->sendJson($this->texyToolbar->getPreview());
 }
 ```
+
+For the basic Texy use `getBasicOptions()` and `getBasicPreview()`: the toolbar then shows only its buttons.
+Any buttons can be chosen with the `buttons` key of the options (`bold`, `italic`, `heading`, `list`, `numbered`,
+`quote`, `link`, `image`, `code`).
 
 Ctrl+B and Ctrl+I work too. The Czech labels come with the package for
 [drago-ex/translator](https://github.com/drago-ex/translator).
