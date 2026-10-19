@@ -1,0 +1,5 @@
+extensions:
+	texy: Drago\Texy\DI\TexyExtension
+
+texy:
+	headingTop: 3

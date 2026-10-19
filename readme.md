@@ -1,7 +1,8 @@
 # Drago Texy Toolbar
 
-[Texy](https://texy.nette.org) for Nette: a toolbar for writing Texy in a textarea, syntax highlighting of code
-blocks and a copy button. Only Bootstrap 5 classes, no extra styles, the colors follow the light and dark theme.
+Everything for writing [Texy](https://texy.nette.org) in a Nette application: safe HTML with highlighted code
+blocks, a toolbar with a preview for the textarea and a copy button for code blocks. Only Bootstrap 5 classes,
+no extra styles.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/drago-ex/texy-toolbar/blob/main/license)
 [![PHP version](https://badge.fury.io/ph/drago-ex%2Ftexy-toolbar.svg)](https://badge.fury.io/ph/drago-ex%2Ftexy-toolbar)
@@ -11,6 +12,7 @@ blocks and a copy button. Only Bootstrap 5 classes, no extra styles, the colors 
 ## Requirements
 
 - PHP >= 8.3, < 9
+- Nette Framework 3.2
 - Composer, npm
 - Bootstrap 5.3
 
@@ -19,6 +21,32 @@ blocks and a copy button. Only Bootstrap 5 classes, no extra styles, the colors 
 ```
 composer require drago-ex/texy-toolbar
 ```
+
+```neon
+extensions:
+	texy: Drago\Texy\DI\TexyExtension
+
+# optional, the level of the first heading (default 2, as the page title is the <h1>)
+texy:
+	headingTop: 2
+```
+
+Several packages may register the extension under the same name in their own config files.
+
+## Texy to HTML
+
+`Drago\Texy\TexyFormatter` converts the text to HTML that can be printed without escaping: raw HTML is limited to
+safe tags, links and images to safe URLs. Code blocks with a language (`/--code php`, also html, latte, css, js,
+sql, neon) are highlighted.
+
+```php
+$this->template->content = $this->texyFormatter->toHtml($page->content);
+```
+
+`createTexy()` gives the configured Texy for a text that needs less (e.g. comments without images).
+`Drago\Texy\Highlighter` can also be used alone: `$highlighter->highlight($code, 'php')`.
+
+## Toolbar
 
 Add the Composer package as a local npm dependency and run `npm install`:
 
@@ -30,59 +58,6 @@ Add the Composer package as a local npm dependency and run `npm install`:
 }
 ```
 
-## Highlighting code blocks
-
-Register the extension; it adds the `Highlighter` and the `CodeBlockHandler` as autowired services:
-
-```neon
-extensions:
-	texy: Drago\Texy\DI\TexyExtension
-
-# optional, the class of the <pre> element
-texy:
-	preClass: 'bg-body-tertiary p-3 rounded'
-```
-
-Add the handler to your Texy, code blocks with a language (`/--code php`) are then highlighted:
-
-```php
-use Drago\Texy\CodeBlockHandler;
-use Texy\Texy;
-
-class Content
-{
-	public function __construct(
-		private readonly CodeBlockHandler $codeBlockHandler,
-	) {
-	}
-
-
-	public function toHtml(string $text): string
-	{
-		$texy = new Texy;
-		$texy->addHandler('block', $this->codeBlockHandler);
-		return $texy->process($text);
-	}
-}
-```
-
-Languages: `php`, `neon`, `latte` (also `html`), `sql`, `css`, `js` (also `javascript`). The code is always
-escaped, blocks of an unknown language are left to Texy.
-
-The `Highlighter` works on its own too:
-
-```php
-$html = $highlighter->highlight('echo $name;', 'php');
-// <span class="text-primary">echo</span> <span class="text-warning-emphasis">$name</span>;
-```
-
-`isSupported()` tells whether a language is known, the classes of the token types are in `Highlighter::Classes`.
-
-## Toolbar
-
-Bold, italic, heading, lists, quote, link, image and code block. A button wraps the selected text, or puts the
-cursor where the text belongs. An optional preview shows the HTML made by the server.
-
 Register the Naja extension, so the toolbar also appears in snippets (without Naja call `initTexyToolbar()`):
 
 ```js
@@ -91,23 +66,27 @@ import TexyToolbar from 'drago-texy-toolbar';
 naja.registerExtension(new TexyToolbar);
 ```
 
-Mark the textarea. The attribute may hold JSON with the preview URL and translated labels:
+Mark the textarea with the options of `Drago\Texy\TexyToolbar` (the preview URL and labels translated by the
+application's translator) and answer the preview:
 
 ```php
 $form->addTextArea('content', 'Content')
-	->setHtmlAttribute('data-texy-toolbar', [
-		'preview' => $this->link('preview!'),
-		'labels' => ['bold' => 'Tučně', 'preview' => 'Náhled'],
-	]);
+	->setHtmlAttribute('data-texy-toolbar', $this->texyToolbar->getOptions($this->link('preview!')));
+
+#[Requires(methods: 'POST', ajax: true)]
+public function handlePreview(): void
+{
+	$this->getPresenter()->sendJson($this->texyToolbar->getPreview());
+}
 ```
 
-The preview sends the text as the POST field `texy` and expects JSON `{"html": "..."}`; the HTML is printed
-as it is, so it must be safe (e.g. Texy in safe mode). Ctrl+B and Ctrl+I work too.
+Ctrl+B and Ctrl+I work too. The Czech labels come with the package for
+[drago-ex/translator](https://github.com/drago-ex/translator).
 
 ## Copy button
 
-A small transparent button in the top right corner of a code block copies the code; it appears when the mouse
-is over the block.
+A small button in the top right corner of a code block copies the code; it appears when the mouse is over the
+block. Copying to the clipboard works on HTTPS and localhost.
 
 ```js
 import { initCopyCode } from 'drago-texy-toolbar/copy-code';
@@ -115,5 +94,4 @@ import { initCopyCode } from 'drago-texy-toolbar/copy-code';
 document.addEventListener('DOMContentLoaded', () => initCopyCode({ label: 'Copy' }));
 ```
 
-By default it is added to every `pre > code`; pass `selector` or `root` to limit it. Copying to the clipboard
-works on HTTPS and localhost.
+By default it is added to every `pre > code`; pass `selector` or `root` to limit it.

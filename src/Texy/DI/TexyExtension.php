@@ -4,31 +4,24 @@ declare(strict_types=1);
 
 namespace Drago\Texy\DI;
 
-use Drago\Texy\CodeBlockHandler;
 use Drago\Texy\Highlighter;
+use Drago\Texy\TexyFormatter;
+use Drago\Texy\TexyToolbar;
 use Nette\DI\CompilerExtension;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
-use stdClass;
 
 
 /**
- * Registers the Highlighter and the CodeBlockHandler as autowired services.
- *
- * extensions:
- *     texy: Drago\Texy\DI\TexyExtension
- *
- * texy:
- *     preClass: 'bg-body-tertiary p-3 rounded'
- *
- * @property-read stdClass $config
+ * Registers the Highlighter, TexyFormatter and TexyToolbar. Several packages may register the extension
+ * under the same name, the configuration is merged.
  */
-final class TexyExtension extends CompilerExtension
+class TexyExtension extends CompilerExtension
 {
 	public function getConfigSchema(): Schema
 	{
 		return Expect::structure([
-			'preClass' => Expect::string('bg-body-tertiary p-3 rounded'),
+			'headingTop' => Expect::int(2)->min(1)->max(6),
 		]);
 	}
 
@@ -36,13 +29,16 @@ final class TexyExtension extends CompilerExtension
 	public function loadConfiguration(): void
 	{
 		$builder = $this->getContainerBuilder();
+		/** @var object{headingTop: int} $config */
+		$config = $this->config;
 
 		$builder->addDefinition($this->prefix('highlighter'))
 			->setFactory(Highlighter::class);
 
-		$builder->addDefinition($this->prefix('codeBlockHandler'))
-			->setFactory(CodeBlockHandler::class, [
-				'preClass' => $this->config->preClass,
-			]);
+		$builder->addDefinition($this->prefix('formatter'))
+			->setFactory(TexyFormatter::class, ['headingTop' => $config->headingTop]);
+
+		$builder->addDefinition($this->prefix('toolbar'))
+			->setFactory(TexyToolbar::class);
 	}
 }

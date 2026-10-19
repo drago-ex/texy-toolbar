@@ -1,0 +1,5 @@
+extensions:
+	texy: Drago\Texy\DI\TexyExtension
+
+services:
+	- Nette\Http\Request(Nette\Http\UrlScript('http://localhost/'))

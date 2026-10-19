@@ -1,6 +1,6 @@
 {
 	"name": "drago-ex/texy-toolbar",
-	"description": "Texy for Nette: toolbar with a preview for a textarea, syntax highlighting of code blocks and a copy button, with Bootstrap 5 classes.",
+	"description": "Texy for Nette: safe HTML with highlighted code blocks, a toolbar with a preview for the textarea and a copy button, with Bootstrap 5 classes.",
 	"type": "library",
 	"license": "MIT",
 	"authors": [
@@ -11,16 +11,23 @@
 	],
 	"require": {
 		"php": ">=8.3 <9",
+		"texy/texy": "^3.2",
 		"nette/di": "^3.2",
-		"texy/texy": "^3.2"
+		"nette/http": "^3.3",
+		"nette/utils": "^4.0"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",
-		"phpstan/phpstan": "^2.1"
+		"phpstan/phpstan-nette": "^2.0"
 	},
 	"autoload": {
 		"psr-4": {
 			"Drago\\": "src"
+		}
+	},
+	"extra": {
+		"drago-translator": {
+			"translation": "src/Texy/Translate"
 		}
 	},
 	"scripts": {

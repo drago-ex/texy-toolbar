@@ -4,37 +4,34 @@ Use this file as package-specific guidance when working in this repository. Keep
 
 ## Package Overview
 - **Package**: `drago-ex/texy-toolbar` (Composer) and `drago-texy-toolbar` (npm, installed from `vendor/drago-ex/texy-toolbar` by the project's npm-loader)
-- **Type**: library, PHP and JavaScript
-- **Purpose**: everything around Texy in one package: the toolbar with a preview for a textarea marked with `data-texy-toolbar`, syntax highlighting of code blocks registered through Nette DI, and the copy button of code blocks.
+- **Type**: library
+- **Purpose**: everything about Texy in one place, so packages (static pages, blog, comments…) only inject services: safe Texy to HTML with highlighted code blocks, the toolbar with a preview for a textarea marked with `data-texy-toolbar`, and the copy button of code blocks. The former `drago-ex/highlighter` was merged here (2026-10-19).
 - **PHP**: >=8.3 <9
-- **Runtime dependencies**: nette/di (^3.2), texy/texy (^3.2); JavaScript has none (Bootstrap 5 classes only, own SVG icons)
+- **Runtime dependencies**: texy/texy (^3.2), nette/di (^3.2), nette/http (^3.3), nette/utils (^4.0); JS has none (Bootstrap 5 classes only, own SVG icons)
 - **License**: MIT
 
-## Repository Layout
-- `src/Texy/`: PHP, namespace `Drago\Texy` (PSR-4 `Drago\` => `src`).
-- `src/assets/`: the npm package (see `package.json` exports): `texy-toolbar.js` (`.`), `copy-code.js` (`./copy-code`), `format.js`.
-- `tests/`: Nette Tester (`*.phpt`) and `node --test` (`*.test.js`).
-- `.github/`: CI workflows; keep their PHP and Node versions and commands consistent with Composer, npm and the package scripts.
-
 ## Key Parts
-- `Highlighter::highlight()` matches one regular expression per language built from the token rules in `getRules()`; at the same position the first rule wins, so comments and strings come first. Text between tokens is only escaped. Colors are Bootstrap 5 classes in `Highlighter::Classes`.
-- `CodeBlockHandler` is an invokable Texy `block` handler: `block/code` with a supported language is highlighted into `<pre class="{preClass}"><code>`, the rest goes to `$invocation->proceed()`.
-- `DI\TexyExtension` registers `texy.highlighter` and `texy.codeBlockHandler` (autowired); config `preClass`. The project creates its own Texy (its safe settings belong to the project) and adds the handler, see project-static-page `PageContent`.
-- `format.js`: pure function computing how a rule (`wrap`, `line`, `block`) changes the text and the selection.
-- `texy-toolbar.js`: builds the toolbar, inserts with `execCommand('insertText')` so Ctrl+Z works, the preview POSTs `texy` (through `naja.makeRequest()` as a Naja extension, so the spinner shows; otherwise `fetch`) and prints the returned `html`; the default export is a Naja extension (forms in snippets), `initTexyToolbar()` works without Naja. The preview endpoint belongs to the project.
-- Keep it simple on purpose (user decision): no nested languages (e.g. `<script>` inside HTML), no regex literals in JS, no custom stylesheet. Written from scratch; do not copy code from other highlighters or editors.
+- `src/Texy/DI/TexyExtension.php`: registers `Highlighter`, `TexyFormatter` (config `headingTop`, default 2) and `TexyToolbar`. Resource packages register it in their own neon under the name `texy`; the same entry in several files merges, so do not rename it.
+- `src/Texy/TexyFormatter.php`: `toHtml()` with safe settings (`Configurator::$safeTags`, no classes/styles, http(s)/mailto links, http(s) images), code blocks highlighted by `Highlighter`; `createTexy()` is public so a package can restrict it further.
+- `src/Texy/TexyToolbar.php`: `getOptions($previewUrl)` for the `data-texy-toolbar` attribute (labels translated by an optional `Nette\Localization\Translator`), `getPreview()` reads the POST field `texy` and returns `['html' => ...]` for `sendJson()`. The preview signal stays in the control that owns the form.
+- `src/Texy/Translate/cs.neon`: Czech labels, found by drago-ex/translator through `extra.drago-translator`.
+- `src/Texy/Highlighter.php`: one regular expression per language built from `getRules()`; at the same position the first rule wins, so comments and strings come first. Keep it simple on purpose (user decision): no nested languages, no regex literals in JS, colors are Bootstrap 5 classes in `Highlighter::Classes`.
+- `src/assets/format.js`: pure function computing how a rule (`wrap`, `line`, `block`) changes the text and the selection; tested in `tests/format.test.js` with `node --test`.
+- `src/assets/texy-toolbar.js`: builds the toolbar, inserts with `execCommand('insertText')` so Ctrl+Z works, the preview POSTs `texy` (through `naja.makeRequest()` as a Naja extension, so the spinner shows; otherwise `fetch`); the default export is a Naja extension, `initTexyToolbar()` works without Naja.
+- `src/assets/copy-code.js`: npm subpath `drago-texy-toolbar/copy-code`, the copy button of `pre > code`.
+- Written from scratch; do not copy code from other editors or highlighters.
 
 ## Essential Commands
 
 ```bash
-composer tester                 # tester tests -s -C
-composer phpstan                # phpstan analyse
+composer tester                 # tester tests -s
+composer phpstan                # phpstan analyse (level max)
 npm test                        # node --test
 ```
 
 ## Conventions & Rules
 
 - Preserve backward compatibility unless the task explicitly permits a breaking change. Check callers and public signatures before changing behavior.
-- Follow the existing PHP style: strict types, explicit parameter and return types, tabs for indentation, and single-quoted strings where practical. Match nearby code when a convention is unclear.
-- Add or update focused tests for behavioral changes. Do not invent test commands; use only the scripts and configuration present here.
+- Follow the existing PHP style: strict types, explicit parameter and return types, tabs for indentation, and single-quoted strings where practical.
+- Add or update focused tests for behavioral changes.
 - Update README examples and Composer metadata when a public API or supported requirement changes.

@@ -13,11 +13,9 @@ Tester\Environment::setupFunctions();
 date_default_timezone_set('Europe/Prague');
 
 
-/** Temporary directory of the current test, for the compiled DI container. */
 function getTempDir(): string
 {
 	$dir = __DIR__ . '/tmp/' . getmypid();
-	@mkdir($dir, recursive: true); // @ - may exist
-	Tester\Helpers::purge($dir);
+	@mkdir($dir, 0o777, true);
 	return $dir;
 }
