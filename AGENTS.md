@@ -7,7 +7,7 @@ Use this file as package-specific guidance when working in this repository. Keep
 - **Type**: library
 - **Purpose**: everything about Texy in one place, so packages (static pages, blog, comments…) only inject services: safe Texy to HTML with highlighted code blocks, the toolbar with a preview for a textarea marked with `data-texy-toolbar`, and the copy button of code blocks. The former `drago-ex/highlighter` was merged here (2026-10-19).
 - **PHP**: >=8.3 <9
-- **Runtime dependencies**: texy/texy (^3.2), nette/di (^3.2), nette/http (^3.3), nette/utils (^4.0); JS has none (Bootstrap 5 classes only, own SVG icons)
+- **Runtime dependencies**: texy/texy (^3.2), nette/di (^3.2), nette/http (^3.3), nette/utils (^4.0), nette/schema (^1.2); JS has none (Bootstrap 5 classes only, own SVG icons)
 - **License**: MIT
 
 ## Key Parts

@@ -14,7 +14,8 @@
 		"texy/texy": "^3.2",
 		"nette/di": "^3.2",
 		"nette/http": "^3.3",
-		"nette/utils": "^4.0"
+		"nette/utils": "^4.0",
+		"nette/schema": "^1.2"
 	},
 	"require-dev": {
 		"nette/tester": "^2.5",

@@ -28,7 +28,13 @@ export function initCopyCode({ root = document, selector = 'pre > code', label =
 		button.innerHTML = copyIcon;
 
 		button.addEventListener('click', async () => {
-			await navigator.clipboard.writeText(code.textContent);
+			// the clipboard is missing or refused outside HTTPS and localhost; the icon then stays unchanged
+			try {
+				await navigator.clipboard.writeText(code.textContent);
+			} catch {
+				return;
+			}
+
 			button.innerHTML = doneIcon;
 			setTimeout(() => button.innerHTML = copyIcon, 1500);
 		});

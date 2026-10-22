@@ -126,8 +126,11 @@ function createPreview(textarea, url, labels, controls) {
 	button.addEventListener('click', async () => {
 		const showing = !preview.classList.contains('d-none');
 		if (!showing) {
+			// a second click while loading would toggle the preview before it arrives
+			button.disabled = true;
 			preview.style.minHeight = textarea.offsetHeight + 'px';
 			preview.innerHTML = await loadPreview(url, textarea.value, labels);
+			button.disabled = false;
 		}
 
 		preview.classList.toggle('d-none', showing);
