@@ -74,7 +74,7 @@ function createToolbar(textarea) {
 	for (const { name, content, rule } of shownButtons) {
 		const button = document.createElement('button');
 		button.type = 'button';
-		button.className = 'btn btn-sm btn-outline-secondary lh-1';
+		button.className = 'btn btn-sm btn-secondary lh-1';
 		button.style.minWidth = '2rem';
 		button.title = labels[name];
 		button.setAttribute('aria-label', labels[name]);
@@ -121,7 +121,7 @@ function createPreview(textarea, url, labels, controls) {
 
 	const button = document.createElement('button');
 	button.type = 'button';
-	button.className = 'btn btn-sm btn-outline-primary ms-auto';
+	button.className = 'btn btn-sm btn-primary ms-auto';
 	button.textContent = labels.preview;
 	button.addEventListener('click', async () => {
 		const showing = !preview.classList.contains('d-none');

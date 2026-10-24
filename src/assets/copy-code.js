@@ -23,7 +23,7 @@ export function initCopyCode({ root = document, selector = 'pre > code', label =
 		button.dataset.copyCode = '';
 		button.title = label;
 		button.setAttribute('aria-label', label);
-		button.className = 'btn btn-sm btn-outline-secondary position-absolute top-0 end-0 m-2 lh-1 '
+		button.className = 'btn btn-sm btn-secondary position-absolute top-0 end-0 m-2 lh-1 '
 			+ (alwaysVisible ? 'opacity-75' : 'opacity-0');
 		button.innerHTML = copyIcon;
 
