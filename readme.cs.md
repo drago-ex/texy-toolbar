@@ -28,7 +28,7 @@ composer require drago-ex/texy-toolbar
 extensions:
 	texy: Drago\Texy\DI\TexyExtension
 
-# volitelné, úroveň prvního nadpisu (výchozí 2, protože nadpis stránky je <h1>)
+# optional, the level of the first heading (default 2, as the page title is the <h1>)
 texy:
 	headingTop: 2
 ```
