@@ -1,7 +1,5 @@
 # Drago Texy Toolbar
 
-English | [Čeština](readme.cs.md)
-
 Everything for writing [Texy](https://texy.nette.org) in a Nette application: safe HTML with highlighted code
 blocks, a toolbar with a preview for the textarea and a copy button for code blocks. Only Bootstrap 5 classes,
 no extra styles.

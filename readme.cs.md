@@ -1,7 +1,5 @@
 # Drago Texy Toolbar
 
-[English](readme.md) | Čeština
-
 Vše pro psaní v [Texy](https://texy.nette.org) v aplikaci na Nette: bezpečné HTML se zvýrazněnými bloky kódu,
 lišta s náhledem pro textové pole a tlačítko pro kopírování bloků kódu. Jen třídy Bootstrapu 5,
 žádné styly navíc.
