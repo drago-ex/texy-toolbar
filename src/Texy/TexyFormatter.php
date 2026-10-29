@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Drago\Texy;
 
@@ -19,11 +17,9 @@ use Texy\Texy;
  */
 class TexyFormatter
 {
-	/**
-	 * @param int $headingTop level of the first heading of the text; 2 when the page title is the <h1>
-	 */
 	public function __construct(
 		private readonly Highlighter $highlighter = new Highlighter,
+		/** @var int level of the first heading of the text; 2 when the page title is the <h1> */
 		private readonly int $headingTop = 2,
 	) {
 	}

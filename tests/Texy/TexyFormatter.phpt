@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Drago\Texy\TexyFormatter
  */
-
-declare(strict_types=1);
 
 use Drago\Texy\TexyFormatter;
 use Tester\Assert;

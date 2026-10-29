@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Drago\Texy\TexyToolbar
  */
-
-declare(strict_types=1);
 
 use Drago\Texy\TexyFormatter;
 use Drago\Texy\TexyToolbar;
@@ -42,7 +40,11 @@ test('Basic options show only the basic buttons', function () {
 
 
 test('The preview converts the POST field texy', function () {
-	$request = new Request(new UrlScript('http://localhost/'), post: ['texy' => "**bold**\n\n[* https://example.com/a.png *]"], method: 'POST');
+	$request = new Request(
+		new UrlScript('http://localhost/'),
+		post: ['texy' => "**bold**\n\n[* https://example.com/a.png *]"],
+		method: 'POST',
+	);
 	$toolbar = new TexyToolbar(new TexyFormatter, $request);
 	Assert::contains('<strong>bold</strong>', $toolbar->getPreview()['html']);
 	Assert::contains('<img', $toolbar->getPreview()['html']);

@@ -1,10 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
  * Test: Drago\Texy\Highlighter
  */
-
-declare(strict_types=1);
 
 use Drago\Texy\Highlighter;
 use Tester\Assert;

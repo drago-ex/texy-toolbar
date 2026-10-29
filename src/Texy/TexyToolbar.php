@@ -1,11 +1,10 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Drago\Texy;
 
 use Nette\Http\IRequest;
 use Nette\Localization\Translator;
+use function is_string;
 
 
 /**

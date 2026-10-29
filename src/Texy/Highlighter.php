@@ -1,8 +1,9 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace Drago\Texy;
+
+use function strlen;
+use const ENT_QUOTES, ENT_SUBSTITUTE, PREG_OFFSET_CAPTURE, PREG_SET_ORDER, PREG_UNMATCHED_AS_NULL;
 
 
 /**
