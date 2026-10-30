@@ -15,12 +15,12 @@ use Texy\Texy;
  * so the output can be printed without escaping even if the text is not written by a trusted person. Images
  * and links stay allowed. Code blocks (/--code php) are highlighted by the Highlighter.
  */
-class TexyFormatter
+readonly class TexyFormatter
 {
 	public function __construct(
-		private readonly Highlighter $highlighter = new Highlighter,
+		private Highlighter $highlighter = new Highlighter,
 		/** @var int level of the first heading of the text; 2 when the page title is the <h1> */
-		private readonly int $headingTop = 2,
+		private int $headingTop = 2,
 	) {
 	}
 

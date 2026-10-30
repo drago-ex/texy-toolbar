@@ -7,10 +7,8 @@ use Nette\Localization\Translator;
 use function is_string;
 
 
-/**
- * Server side of the toolbar: the options of the data-texy-toolbar attribute and the HTML of the preview.
- */
-class TexyToolbar
+/** Server side of the toolbar: the options of the data-texy-toolbar attribute and the HTML of the preview. */
+readonly class TexyToolbar
 {
 	/** Labels of the toolbar, translated by the translator of the application. */
 	public const array Labels = [
@@ -33,9 +31,9 @@ class TexyToolbar
 
 
 	public function __construct(
-		private readonly TexyFormatter $formatter,
-		private readonly IRequest $httpRequest,
-		private readonly ?Translator $translator = null,
+		private TexyFormatter $formatter,
+		private IRequest $httpRequest,
+		private ?Translator $translator = null,
 	) {
 	}
 
