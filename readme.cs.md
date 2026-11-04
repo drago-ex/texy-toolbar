@@ -51,24 +51,6 @@ seznamy, citace a kód a zachová zalomení řádků; žádné obrázky, nadpisy
 
 ## Lišta
 
-Přidejte balíček z Composeru jako lokální závislost npm a spusťte `npm install`:
-
-```json
-{
-	"dependencies": {
-		"drago-texy-toolbar": "file:vendor/drago-ex/texy-toolbar"
-	}
-}
-```
-
-Zaregistrujte rozšíření Naja, aby se lišta objevila i ve snippetech (bez Naja zavolejte `initTexyToolbar()`):
-
-```js
-import TexyToolbar from 'drago-texy-toolbar';
-
-naja.registerExtension(new TexyToolbar);
-```
-
 Označte textové pole volbami z `Drago\Texy\TexyToolbar` (URL náhledu a popisky přeložené
 překladačem aplikace) a odpovězte na náhled:
 
@@ -88,9 +70,31 @@ Libovolná tlačítka lze vybrat klíčem `buttons` ve volbách (`bold`, `italic
 `quote`, `link`, `image`, `code`).
 
 Fungují i Ctrl+B a Ctrl+I. České popisky jsou součástí balíčku pro
-[drago-ex/translator](https://github.com/drago-ex/translator).
+[drago-ex/translator](https://github.com/drago-ex/translator). Její skript zaregistrujte podle oddílu Assety.
 
-## Tlačítko pro kopírování
+## Assety
+
+Přidejte balíček z Composeru jako lokální závislost npm a spusťte `npm install`:
+
+```json
+{
+	"dependencies": {
+		"drago-texy-toolbar": "file:vendor/drago-ex/texy-toolbar"
+	}
+}
+```
+
+### Lišta
+
+Zaregistrujte rozšíření Naja, aby se lišta objevila i ve snippetech (bez Naja zavolejte `initTexyToolbar()`):
+
+```js
+import TexyToolbar from 'drago-texy-toolbar';
+
+naja.registerExtension(new TexyToolbar);
+```
+
+### Tlačítko pro kopírování
 
 Malé tlačítko v pravém horním rohu bloku kódu zkopíruje kód; objeví se při najetí myší na
 blok. Kopírování do schránky funguje na HTTPS a na localhostu.

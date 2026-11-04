@@ -51,24 +51,6 @@ lists, quotes and code, and keeps the line breaks; no images, headings, tables o
 
 ## Toolbar
 
-Add the Composer package as a local npm dependency and run `npm install`:
-
-```json
-{
-	"dependencies": {
-		"drago-texy-toolbar": "file:vendor/drago-ex/texy-toolbar"
-	}
-}
-```
-
-Register the Naja extension, so the toolbar also appears in snippets (without Naja call `initTexyToolbar()`):
-
-```js
-import TexyToolbar from 'drago-texy-toolbar';
-
-naja.registerExtension(new TexyToolbar);
-```
-
 Mark the textarea with the options of `Drago\Texy\TexyToolbar` (the preview URL and labels translated by the
 application's translator) and answer the preview:
 
@@ -88,9 +70,31 @@ Any buttons can be chosen with the `buttons` key of the options (`bold`, `italic
 `quote`, `link`, `image`, `code`).
 
 Ctrl+B and Ctrl+I work too. The Czech labels come with the package for
-[drago-ex/translator](https://github.com/drago-ex/translator).
+[drago-ex/translator](https://github.com/drago-ex/translator). Register its script as shown in Assets.
 
-## Copy button
+## Assets
+
+Add the Composer package as a local npm dependency and run `npm install`:
+
+```json
+{
+	"dependencies": {
+		"drago-texy-toolbar": "file:vendor/drago-ex/texy-toolbar"
+	}
+}
+```
+
+### Toolbar
+
+Register the Naja extension, so the toolbar also appears in snippets (without Naja call `initTexyToolbar()`):
+
+```js
+import TexyToolbar from 'drago-texy-toolbar';
+
+naja.registerExtension(new TexyToolbar);
+```
+
+### Copy button
 
 A small button in the top right corner of a code block copies the code; it appears when the mouse is over the
 block. Copying to the clipboard works on HTTPS and localhost.
