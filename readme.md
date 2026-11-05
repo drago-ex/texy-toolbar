@@ -70,11 +70,11 @@ Any buttons can be chosen with the `buttons` key of the options (`bold`, `italic
 `quote`, `link`, `image`, `code`).
 
 Ctrl+B and Ctrl+I work too. The Czech labels come with the package for
-[drago-ex/translator](https://github.com/drago-ex/translator). Register its script as shown in Assets.
+[drago-ex/translator](https://github.com/drago-ex/translator).
 
 ## Assets
 
-Add the Composer package as a local npm dependency and run `npm install`:
+Add the Composer package as a local npm dependency and run `npm install` (Drago Project installs it by itself):
 
 ```json
 {

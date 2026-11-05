@@ -5,14 +5,14 @@ Use this file as package-specific guidance when working in this repository. Keep
 ## Package Overview
 - **Package**: `drago-ex/texy-toolbar` (Composer) and `drago-texy-toolbar` (npm, installed from `vendor/drago-ex/texy-toolbar` by the project's npm-loader)
 - **Type**: library
-- **Purpose**: everything about Texy in one place, so packages (static pages, blog, comments…) only inject services: safe Texy to HTML with highlighted code blocks, the toolbar with a preview for a textarea marked with `data-texy-toolbar`, and the copy button of code blocks. The former `drago-ex/highlighter` was merged here (2026-10-19).
+- **Purpose**: everything about Texy in one place, so packages (static pages, blog, comments…) only inject services: safe Texy to HTML with highlighted code blocks, the toolbar with a preview for a textarea marked with `data-texy-toolbar`, and the copy button of code blocks.
 - **PHP**: >=8.3 <9
 - **Runtime dependencies**: texy/texy (^3.2), nette/di (^3.2), nette/http (^3.3), nette/utils (^4.0), nette/schema (^1.2); JS has none (Bootstrap 5 classes only, own SVG icons)
 - **License**: MIT
 
 ## Key Parts
 - `src/Texy/DI/TexyExtension.php`: registers `Highlighter`, `TexyFormatter` (config `headingTop`, default 2) and `TexyToolbar`. Resource packages register it in their own neon under the name `texy`; the same entry in several files merges, so do not rename it.
-- `src/Texy/TexyFormatter.php`: `toHtml()` with safe settings (`Configurator::$safeTags`, no classes/styles, http(s)/mailto links, http(s) images), code blocks highlighted by `Highlighter`; `createTexy()` is public so a package can restrict it further. `toBasicHtml()`/`createBasicTexy()` for texts of visitors (blog comments, 2026-10-19): no HTML tags, images, headings, tables, horizontal lines or link definitions, links `rel="nofollow"`, `mergeLines = false` (Enter makes `<br>`).
+- `src/Texy/TexyFormatter.php`: `toHtml()` with safe settings (`Configurator::$safeTags`, no classes/styles, http(s)/mailto links, http(s) images), code blocks highlighted by `Highlighter`; `createTexy()` is public so a package can restrict it further. `toBasicHtml()`/`createBasicTexy()` for texts of visitors (blog comments): no HTML tags, images, headings, tables, horizontal lines or link definitions, links `rel="nofollow"`, `mergeLines = false` (Enter makes `<br>`).
 - `src/Texy/TexyToolbar.php`: `getOptions($previewUrl)` for the `data-texy-toolbar` attribute (labels translated by an optional `Nette\Localization\Translator`), `getPreview()` reads the POST field `texy` and returns `['html' => ...]` for `sendJson()`; `getBasicOptions()` adds `buttons` = `BasicButtons` and `getBasicPreview()` uses `toBasicHtml()`. The preview signal stays in the control that owns the form. The JS option `buttons` lists the shown buttons (`code` is the language select), all when missing.
 - `src/Texy/Translate/cs.neon`: Czech labels, found by drago-ex/translator through `extra.drago-translator`.
 - `src/Texy/Highlighter.php`: one regular expression per language built from `getRules()`; at the same position the first rule wins, so comments and strings come first. Keep it simple on purpose (user decision): no nested languages, no regex literals in JS, colors are Bootstrap 5 classes in `Highlighter::Classes`.
